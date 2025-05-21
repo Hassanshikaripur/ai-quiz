@@ -62,3 +62,5 @@ const StudyMaterials: React.FC<StudyMaterialsProps> = ({ topic }) => {
     </div>
   );
 };
+
+export default StudyMaterials

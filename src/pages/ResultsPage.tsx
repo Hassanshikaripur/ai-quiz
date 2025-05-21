@@ -88,3 +88,5 @@ const ResultsPage: React.FC = () => {
     </div>
   );
 };
+
+export default ResultsPage

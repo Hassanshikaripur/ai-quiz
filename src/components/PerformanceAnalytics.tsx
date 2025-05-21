@@ -99,3 +99,5 @@ const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({ history }) 
     </div>
   );
 };
+
+export default PerformanceAnalytics
