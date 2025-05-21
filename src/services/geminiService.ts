@@ -7,10 +7,10 @@ const MODEL_NAME = 'gemini-2.0-flash';
 const genAI = new GoogleGenerativeAI(API_KEY);
 const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
-export const generateQuizQuestions = async (topic: string): Promise<QuizData> => {
+export const generateQuizQuestions = async (topic: string, difficulty: 'easy' | 'medium' | 'hard'): Promise<QuizData> => {
   try {
     const prompt = `
-    Create a 10-question multiple-choice quiz about "${topic}". 
+    Create a 10-question multiple-choice quiz about "${topic}" with ${difficulty} difficulty level. 
     For each question:
     1. Provide a clear question
     2. Provide exactly 4 answer options (labeled A, B, C, D)
@@ -32,22 +32,27 @@ export const generateQuizQuestions = async (topic: string): Promise<QuizData> =>
       ]
     }
     
-    Make the quiz properly challenging with varying difficulty levels.
+    For ${difficulty} difficulty:
+    - Easy: Basic knowledge and straightforward questions
+    - Medium: More detailed questions requiring good understanding
+    - Hard: Complex questions requiring deep knowledge
     `;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
 
-    // Extract JSON from the response
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error('Failed to parse JSON response from AI');
     }
 
-    const quizData: QuizData = JSON.parse(jsonMatch[0]);
+    const quizData: QuizData = {
+      ...JSON.parse(jsonMatch[0]),
+      difficulty,
+      timePerQuestion: difficulty === 'easy' ? 30 : difficulty === 'medium' ? 45 : 60
+    };
 
-    // Validate the response format
     if (!quizData.topic || !quizData.questions || quizData.questions.length !== 10) {
       throw new Error('Invalid quiz data format');
     }
