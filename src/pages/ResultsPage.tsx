@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuiz } from '../context/QuizContext';
 import ResultCard from '../components/ResultCard';
 import QuizCard from '../components/QuizCard';
+import ShareResults from '../components/ShareResults';
 
 const ResultsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -67,6 +68,11 @@ const ResultsPage: React.FC = () => {
             result={quizResult}
             onReset={handleReset}
             onViewQuestions={handleViewQuestions}
+          />
+          <ShareResults
+            score={quizResult.score}
+            total={quizResult.questions.length}
+            topic={quizResult.topic}
           />
         </div>
       )}

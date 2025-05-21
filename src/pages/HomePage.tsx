@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useQuiz } from '../context/QuizContext';
 import Button from '../components/Button';
+import DifficultySelector from '../components/DifficultySelector';
+import QuizHistory from '../components/QuizHistory';
 import { Brain, GraduationCap, Sparkles, Target, Book, Award, ArrowRight } from 'lucide-react';
 
 const HomePage: React.FC = () => {
@@ -47,7 +49,6 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -108,6 +109,9 @@ const HomePage: React.FC = () => {
                     <p className="mt-2 text-sm text-red-600 dark:text-red-400">{inputError}</p>
                   )}
                 </div>
+
+                <DifficultySelector />
+                
                 <Button 
                   type="submit" 
                   fullWidth 
@@ -124,6 +128,8 @@ const HomePage: React.FC = () => {
                 </Button>
               </form>
             </motion.div>
+
+            <QuizHistory />
           </div>
         </motion.div>
       </section>
