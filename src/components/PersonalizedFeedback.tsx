@@ -68,3 +68,5 @@ const PersonalizedFeedback: React.FC<PersonalizedFeedbackProps> = ({ result }) =
     </div>
   );
 };
+
+export default PersonalizedFeedback
