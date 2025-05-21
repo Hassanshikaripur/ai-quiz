@@ -63,3 +63,57 @@ export const generateQuizQuestions = async (topic: string, difficulty: 'easy' | 
     throw new Error('Failed to generate quiz. Please try again.');
   }
 };
+
+export const generateStudyMaterials = async (topic: string): Promise<string> => {
+  try {
+    const prompt = `
+    Create a concise study guide for "${topic}" that includes:
+    1. Key concepts and definitions
+    2. Important points to remember
+    3. Examples where applicable
+    4. Common misconceptions
+    
+    Format the response in markdown.
+    `;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    return response.text();
+  } catch (error) {
+    console.error('Error generating study materials:', error);
+    throw new Error('Failed to generate study materials. Please try again.');
+  }
+};
+
+export const generatePersonalizedFeedback = async (
+  topic: string,
+  questions: any[],
+  userAnswers: number[],
+  correctAnswers: number[]
+): Promise<string> => {
+  try {
+    const incorrectQuestions = questions.filter((_, index) => userAnswers[index] !== correctAnswers[index]);
+    
+    const prompt = `
+    Analyze the quiz performance on "${topic}" and provide personalized feedback:
+    
+    Questions answered incorrectly:
+    ${incorrectQuestions.map(q => q.question).join('\n')}
+    
+    Provide:
+    1. Analysis of common mistakes
+    2. Specific areas that need improvement
+    3. Recommended study resources
+    4. Tips for better understanding of the topic
+    
+    Format the response in markdown.
+    `;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    return response.text();
+  } catch (error) {
+    console.error('Error generating feedback:', error);
+    throw new Error('Failed to generate feedback. Please try again.');
+  }
+};

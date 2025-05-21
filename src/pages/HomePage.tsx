@@ -5,6 +5,7 @@ import { useQuiz } from '../context/QuizContext';
 import Button from '../components/Button';
 import DifficultySelector from '../components/DifficultySelector';
 import QuizHistory from '../components/QuizHistory';
+import StudyMaterials from '../components/StudyMaterials';
 import { Brain, GraduationCap, Sparkles, Target, Book, Award, ArrowRight } from 'lucide-react';
 
 const HomePage: React.FC = () => {
@@ -129,12 +130,12 @@ const HomePage: React.FC = () => {
               </form>
             </motion.div>
 
+            {inputText && <StudyMaterials topic={inputText} />}
             <QuizHistory />
           </div>
         </motion.div>
       </section>
 
-      {/* Features Section */}
       <section className="py-20 bg-gray-50 dark:bg-gray-800/50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 scroll-animation">
@@ -175,7 +176,6 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* How It Works Section */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 scroll-animation">

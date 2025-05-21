@@ -4,10 +4,12 @@ import { useQuiz } from '../context/QuizContext';
 import ResultCard from '../components/ResultCard';
 import QuizCard from '../components/QuizCard';
 import ShareResults from '../components/ShareResults';
+import PersonalizedFeedback from '../components/PersonalizedFeedback';
+import PerformanceAnalytics from '../components/PerformanceAnalytics';
 
 const ResultsPage: React.FC = () => {
   const navigate = useNavigate();
-  const { quizResult, resetQuiz, userAnswers, setCurrentQuestion } = useQuiz();
+  const { quizResult, resetQuiz, userAnswers, setCurrentQuestion, quizHistory } = useQuiz();
   const [viewingQuestion, setViewingQuestion] = React.useState<number | null>(null);
 
   React.useEffect(() => {
@@ -63,21 +65,26 @@ const ResultsPage: React.FC = () => {
           />
         </div>
       ) : (
-        <div className="animate-fade-in">
+        <div className="animate-fade-in max-w-5xl mx-auto">
           <ResultCard
             result={quizResult}
             onReset={handleReset}
             onViewQuestions={handleViewQuestions}
           />
+          
           <ShareResults
             score={quizResult.score}
             total={quizResult.questions.length}
             topic={quizResult.topic}
           />
+          
+          <PersonalizedFeedback result={quizResult} />
+          
+          {quizHistory.length > 0 && (
+            <PerformanceAnalytics history={quizHistory} />
+          )}
         </div>
       )}
     </div>
   );
 };
-
-export default ResultsPage;
