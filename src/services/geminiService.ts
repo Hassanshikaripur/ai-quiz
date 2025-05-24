@@ -117,3 +117,39 @@ export const generatePersonalizedFeedback = async (
     throw new Error('Failed to generate feedback. Please try again.');
   }
 };
+
+export const generateStudyTimetable = async (
+  topics: string[],
+  performance: { topic: string; score: number }[]
+): Promise<string> => {
+  try {
+    const prompt = `
+    Create a personalized weekly study timetable based on these topics and quiz performance:
+    
+    Topics to study: ${topics.join(', ')}
+    
+    Performance data:
+    ${performance.map(p => `${p.topic}: ${p.score}%`).join('\n')}
+    
+    Create a detailed study schedule that:
+    1. Prioritizes topics with lower scores
+    2. Allocates more time to challenging subjects
+    3. Includes breaks and review sessions
+    4. Suggests specific study activities
+    5. Provides time management tips
+    
+    Format the response in markdown with:
+    - Daily schedule
+    - Study techniques for each topic
+    - Break recommendations
+    - Progress tracking tips
+    `;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    return response.text();
+  } catch (error) {
+    console.error('Error generating study timetable:', error);
+    throw new Error('Failed to generate study timetable. Please try again.');
+  }
+};

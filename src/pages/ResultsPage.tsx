@@ -6,6 +6,7 @@ import QuizCard from '../components/QuizCard';
 import ShareResults from '../components/ShareResults';
 import PersonalizedFeedback from '../components/PersonalizedFeedback';
 import PerformanceAnalytics from '../components/PerformanceAnalytics';
+import StudyTimetable from '../components/StudyTimetable';
 
 const ResultsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -42,6 +43,13 @@ const ResultsPage: React.FC = () => {
       setViewingQuestion(null);
     }
   };
+
+  // Prepare data for study timetable
+  const topics = quizHistory.map(result => result.topic);
+  const performance = quizHistory.map(result => ({
+    topic: result.topic,
+    score: (result.score / result.questions.length) * 100
+  }));
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 py-8 px-4">
@@ -81,7 +89,10 @@ const ResultsPage: React.FC = () => {
           <PersonalizedFeedback result={quizResult} />
           
           {quizHistory.length > 0 && (
-            <PerformanceAnalytics history={quizHistory} />
+            <>
+              <PerformanceAnalytics history={quizHistory} />
+              <StudyTimetable topics={topics} performance={performance} />
+            </>
           )}
         </div>
       )}
@@ -89,4 +100,4 @@ const ResultsPage: React.FC = () => {
   );
 };
 
-export default ResultsPage
+export default ResultsPage;
