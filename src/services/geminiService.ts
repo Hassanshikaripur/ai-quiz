@@ -73,7 +73,19 @@ export const generateStudyMaterials = async (topic: string): Promise<string> => 
     3. Examples where applicable
     4. Common misconceptions
     
-    Format the response in markdown.
+    Format the response as this:
+    +------------+------------+------------+------------+------------+------------+------------+
+| Time       | Monday     | Tuesday    | Wednesday  | Thursday   | Friday     | Saturday   |
++------------+------------+------------+------------+------------+------------+------------+
+| 08:00-09:00| Math       | Physics    | Chemistry  | Biology    | English    |            |
+| 09:00-10:00| English    | Math       | Physics    | Chemistry  | Biology    |            |
+| 10:00-11:00|            |            |            |            |            |            |
+| 11:00-12:00|            |            |            |            |            |            |
+| 12:00-01:00| Lunch Break                                                                 |
+| 01:00-02:00|            |            |            |            |            |            |
+| 02:00-03:00|            |            |            |            |            |            |
++------------+------------+------------+------------+------------+------------+------------+
+
     `;
 
     const result = await model.generateContent(prompt);
