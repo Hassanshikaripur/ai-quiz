@@ -1,52 +1,11 @@
-import React, { FormEvent, useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useQuiz } from '../context/QuizContext';
+import { Brain, Calendar, ArrowRight } from 'lucide-react';
 import Button from '../components/Button';
-import DifficultySelector from '../components/DifficultySelector';
-import QuizHistory from '../components/QuizHistory';
-import StudyMaterials from '../components/StudyMaterials';
-import { Brain, GraduationCap, Sparkles, Target, Book, Award, ArrowRight } from 'lucide-react';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const { generateQuiz, isLoading } = useQuiz();
-  const [inputText, setInputText] = useState('');
-  const [inputError, setInputError] = useState('');
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    document.querySelectorAll('.scroll-animation').forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    
-    if (!inputText.trim()) {
-      setInputError('Please enter a topic or text to generate a quiz');
-      return;
-    }
-    
-    setInputError('');
-    try {
-      await generateQuiz(inputText.trim());
-      navigate('/quiz');
-    } catch (error) {
-      setInputError('Failed to generate quiz. Please try again.');
-    }
-  };
 
   return (
     <div className="min-h-screen">
@@ -84,138 +43,59 @@ const HomePage: React.FC = () => {
               transition={{ delay: 0.4 }}
               className="text-xl text-gray-600 dark:text-gray-300 mb-12 max-w-3xl mx-auto"
             >
-              Transform any topic into an engaging quiz instantly with AI. Perfect for students, teachers, and curious minds.
+              Transform your learning experience with AI-powered quizzes and personalized study schedules.
             </motion.p>
 
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="card p-6 md:p-8 mb-12"
-            >
-              <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              {/* Quiz Card */}
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+              >
                 <div className="mb-6">
-                  <label htmlFor="topic" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Enter a topic or paste text
-                  </label>
-                  <textarea
-                    id="topic"
-                    rows={4}
-                    placeholder="e.g., 'The history of Ancient Egypt' or paste a paragraph about any subject..."
-                    className="input"
-                    value={inputText}
-                    onChange={(e) => setInputText(e.target.value)}
-                  />
-                  {inputError && (
-                    <p className="mt-2 text-sm text-red-600 dark:text-red-400">{inputError}</p>
-                  )}
+                  <Brain className="h-12 w-12 text-primary-600 mx-auto mb-4" />
+                  <h2 className="text-2xl font-bold mb-2">Take a Quiz</h2>
+                  <p className="text-gray-600">Test your knowledge with AI-generated questions on any topic.</p>
                 </div>
-
-                <DifficultySelector />
-                
                 <Button 
-                  type="submit" 
-                  fullWidth 
-                  isLoading={isLoading}
-                  className="h-12 text-lg"
+                  onClick={() => navigate('/quiz-setup')}
+                  fullWidth
+                  size="lg"
+                  className="group"
                 >
-                  {isLoading ? (
-                    'Generating Quiz...'
-                  ) : (
-                    <>
-                      Start Quiz <ArrowRight className="ml-2 h-5 w-5" />
-                    </>
-                  )}
+                  Start Quiz
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
-              </form>
-            </motion.div>
+              </motion.div>
 
-            {inputText && <StudyMaterials topic={inputText} />}
-            <QuizHistory />
+              {/* Timetable Card */}
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+              >
+                <div className="mb-6">
+                  <Calendar className="h-12 w-12 text-purple-600 mx-auto mb-4" />
+                  <h2 className="text-2xl font-bold mb-2">Create Schedule</h2>
+                  <p className="text-gray-600">Generate an AI-optimized study timetable for better learning.</p>
+                </div>
+                <Button 
+                  onClick={() => navigate('/timetable')}
+                  fullWidth
+                  size="lg"
+                  variant="secondary"
+                  className="group"
+                >
+                  Create Timetable
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </motion.div>
+            </div>
           </div>
         </motion.div>
-      </section>
-
-      <section className="py-20 bg-gray-50 dark:bg-gray-800/50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 scroll-animation">
-            Why Choose QuizGenius?
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                icon: <Sparkles className="h-8 w-8 text-primary-600" />,
-                title: 'AI-Powered Intelligence',
-                description: 'Leverages Google Gemini 2.0 Flash to generate intelligent, contextually relevant questions.'
-              },
-              {
-                icon: <Target className="h-8 w-8 text-purple-600" />,
-                title: 'Instant Customization',
-                description: 'Create quizzes on any topic instantly. Perfect for quick learning assessments.'
-              },
-              {
-                icon: <Book className="h-8 w-8 text-teal-600" />,
-                title: 'Learn from Mistakes',
-                description: 'Detailed explanations for every answer help you understand and improve.'
-              }
-            ].map((feature, index) => (
-              <div 
-                key={index}
-                className="card p-6 scroll-animation"
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
-                <div className="flex items-center mb-4">
-                  {feature.icon}
-                  <h3 className="text-xl font-semibold ml-3">{feature.title}</h3>
-                </div>
-                <p className="text-gray-600 dark:text-gray-300">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 scroll-animation">
-            How It Works
-          </h2>
-          
-          <div className="max-w-4xl mx-auto">
-            {[
-              {
-                icon: <Book className="h-6 w-6" />,
-                title: 'Enter Your Topic',
-                description: 'Type any topic or paste text you want to be quizzed on.'
-              },
-              {
-                icon: <Sparkles className="h-6 w-6" />,
-                title: 'AI Generation',
-                description: 'Our AI creates a personalized 10-question quiz instantly.'
-              },
-              {
-                icon: <Award className="h-6 w-6" />,
-                title: 'Test Your Knowledge',
-                description: 'Answer questions and get immediate feedback with explanations.'
-              }
-            ].map((step, index) => (
-              <div 
-                key={index}
-                className="flex items-start mb-12 scroll-animation"
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center mr-4">
-                  {step.icon}
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-300">{step.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </section>
     </div>
   );
